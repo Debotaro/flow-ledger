@@ -10,6 +10,8 @@ services:
   worker:
     build: .
     command: ["python", "-m", "flowledger.worker"]
+    healthcheck:
+      disable: true # The worker has no HTTP listener; inspect polling progress through the API.
     environment:
       FLOW_DEMO_MODE: '0'
     volumes: ["flow-data:/app/data"]
