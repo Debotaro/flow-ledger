@@ -1,3 +1,4 @@
 * text=auto eol=lf
+reports/*.json -text
 *.png binary
 *.woff2 binary
