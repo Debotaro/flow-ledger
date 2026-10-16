@@ -10,11 +10,27 @@
   "reliability_experiments_total": 9,
   "ruff": "passed",
   "browser_formatting": "passed",
-  "viewports_tested_px": [1440, 390, 320],
+  "viewports_tested_px": [
+    1440,
+    390,
+    320
+  ],
   "automated_accessibility_violations_observed": 0,
   "browser_scope": "Actual local API/SQLite workflow checks; four boundary tests and interrupted-intake response behavior explicitly simulate browser responses. Automated accessibility is limited to tested states.",
-  "docker_executed": false,
-  "hosted_ci_executed": false,
-  "public_deployment": "pending_approval_and_authorized_host",
-  "limitations": ["single shared workspace", "self-asserted approval actor labels", "local case connector only", "synthetic controlled fault experiments", "no universal exactly-once delivery claim"]
+  "docker_executed": true,
+  "hosted_ci_executed": true,
+  "public_deployment": "pending_authorized_persistent_host",
+  "limitations": [
+    "single shared workspace",
+    "self-asserted approval actor labels",
+    "local case connector only",
+    "synthetic controlled fault experiments",
+    "no universal exactly-once delivery claim"
+  ],
+  "docker_execution_environment": "GitHub Actions Ubuntu runner, isolated Compose API and worker",
+  "hosted_ci_run": "https://github.com/Debotaro/flow-ledger/actions/runs/38913699730",
+  "hosted_ci_source_commit": "a4f346aecbab72f09bc796184baec573c7fca96d",
+  "container_runtime_checks_passed": 13,
+  "container_runtime_checks_total": 13,
+  "public_source_repository": "https://github.com/Debotaro/flow-ledger"
 }

@@ -32,4 +32,10 @@ Automated WCAG A/AA scans and overflow checks passed in the tested desktop 1440p
 
 `reports/verification-summary.json` records the local acceptance gate. The reliability JSON contains backend experiment results; browser behavior was verified separately rather than inferred from it.
 
-The repository includes architecture, security boundaries, setup, recovery guidance, a dependency lock, license, non-root Docker/Compose configuration and pinned CI. Docker CLI is absent in the local environment, so no container execution is claimed. Hosted CI and public deployment remain pending explicit publication approval and an authorized persistent hosting target.
+## Public release and hosted container execution
+
+After publication approval, [GitHub Actions run 38913699730](https://github.com/Debotaro/flow-ledger/actions/runs/38913699730) passed at source commit `a4f346aecbab72f09bc796184baec573c7fca96d`: twenty backend tests, nine reliability experiments, sixteen browser checks, the Docker image build and thirteen actual container runtime checks. Docker remains unavailable on the local Windows machine; the container execution occurred on the hosted Ubuntu runner.
+
+`scripts/container_smoke.py` starts the supplied Compose API and independent worker in a disposable project with a unique named volume and a temporary token. It verifies authentication and disabled demo faults, both containers' non-root UID/GID 10001, shared storage, real worker processing, duplicate intake preserving one case, approval gating, persistent state after both services restart, queued work while the worker is stopped, recovery after worker restart and the image HTTP health check. The script cleans up only its own disposable project. The exact downloaded CI artifact is retained as [hosted-container-verification.json](../reports/hosted-container-verification.json).
+
+This is a successful hosted verification run, not a public application deployment or an availability/load test. The connector still creates local SQLite cases only. The public source repository is available; a persistent backend host, HTTPS hostname and operating authorization are still required before a live service can be claimed.

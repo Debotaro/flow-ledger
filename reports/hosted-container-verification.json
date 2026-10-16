@@ -1,0 +1,60 @@
+{
+  "generated_at": "2026-10-16T14:12:40.105763+00:00",
+  "scope": "Disposable Docker Compose API and independent worker, fictional local case effects only. No public hosting, external delivery or availability claim.",
+  "checks": [
+    {
+      "name": "API requires workspace authentication and disables demo faults",
+      "passed": true
+    },
+    {
+      "name": "Unauthenticated protected API rejects access",
+      "passed": true
+    },
+    {
+      "name": "API and independent worker run as UID/GID 10001",
+      "passed": true
+    },
+    {
+      "name": "API and worker are distinct running containers",
+      "passed": true
+    },
+    {
+      "name": "Both services share the same named persistent data volume",
+      "passed": true
+    },
+    {
+      "name": "Independent polling worker creates one actual local case",
+      "passed": true
+    },
+    {
+      "name": "Duplicate intake preserves job and local effect identity",
+      "passed": true
+    },
+    {
+      "name": "Polling worker leaves unapproved refund without an effect",
+      "passed": true
+    },
+    {
+      "name": "Approved local case completes through the independent worker",
+      "passed": true
+    },
+    {
+      "name": "Jobs and case effects survive API and worker restart",
+      "passed": true
+    },
+    {
+      "name": "API persists queued work while the separate worker is stopped",
+      "passed": true
+    },
+    {
+      "name": "Restarted worker drains previously persisted work",
+      "passed": true
+    },
+    {
+      "name": "Image HTTP health check passes on the running API",
+      "passed": true
+    }
+  ],
+  "status": "passed",
+  "passed": 13
+}

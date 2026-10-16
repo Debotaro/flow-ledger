@@ -17,7 +17,7 @@ Consult the configuration source for lease/retry/capacity defaults and permitted
 
 ## Container and hosting
 
-The supplied image runs as UID 10001. Compose creates separate API and worker services on the same named SQLite volume, exposes the API on host loopback only, and requires an explicit token. The worker disables the image's HTTP health check because it has no listener; verify worker readiness through actual due-job progress. No paid service is needed for local execution. Container files and a CI image-build job have been prepared; see the verification report for whether Docker execution was possible in this environment.
+The supplied image runs as UID 10001. Compose creates separate API and worker services on the same named SQLite volume, exposes the API on host loopback only, and requires an explicit token. The worker disables the image's HTTP health check because it has no listener; verify worker readiness through actual due-job progress. No paid service is needed for local execution. Hosted CI builds the image and runs `python3 scripts/container_smoke.py` against disposable Compose services, checking actual worker progress and restart persistence. See the [verification record](VERIFICATION.md) for the executed run and its scope.
 
 Public deployment is an explicit approval step. Use persistent disk with correct filesystem locking, HTTPS, a managed restart policy, secret injection, allowed hosts and reverse-proxy request limits. Do not horizontally scale multiple hosts over an unsuitable shared SQLite filesystem. Do not point the connector at real customer, financial or messaging systems without a new authorization and reliability review.
 

@@ -1,5 +1,7 @@
 # FlowLedger
 
+[![Verify FlowLedger](https://github.com/Debotaro/flow-ledger/actions/workflows/ci.yml/badge.svg)](https://github.com/Debotaro/flow-ledger/actions/workflows/ci.yml)
+
 Support automation must survive a duplicate event, a delayed approval and a worker crash. FlowLedger turns typed support events into durable local case-management actions, with an inspectable queue and audit history.
 
 This is a complete bounded single-workspace service with an independent worker process and operator console. Routing is deterministic. Its connector writes real SQLite case records; it does not send messages, issue refunds, lock customer accounts or call external tools.
@@ -56,6 +58,6 @@ The verification command runs isolated real SQLite workflows with controlled fau
 
 FastAPI/Pydantic provides typed JSON contracts; SQLite WAL stores events, durable outbox jobs, audit and case effects. The static same-origin operator console reads actual state. A separate worker claims and executes due work. See [architecture](docs/ARCHITECTURE.md), [security](SECURITY.md), [operations](docs/OPERATIONS.md) and [API contract](API_CONTRACT.md).
 
-A non-root container, local Compose configuration, dependency lock and GitHub Actions workflow are included. Hosted CI, container execution and public deployment must each be verified separately; configuration alone is not a successful deployment. Public hosting requires approval, persistent storage, HTTPS, a workspace token and an explicit allowed hostname.
+A non-root container, local Compose configuration, dependency lock and GitHub Actions workflow are included. Hosted CI has executed the backend/browser checks and built and run the image: thirteen Compose smoke checks passed, including independent worker progress and persistence across service restarts. See the [executed release record](docs/VERIFICATION.md#public-release-and-hosted-container-execution). A public application deployment remains pending an authorized persistent host, HTTPS, a workspace token and an explicit allowed hostname.
 
 Personal portfolio project for Deboraj Sarkar, developed with Codex-assisted implementation and executable review. It demonstrates system behavior, not prior automation employment or independently assessed individual proficiency. See [engineering walkthrough](docs/WALKTHROUGH.md). Code is MIT licensed.
