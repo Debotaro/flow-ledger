@@ -1,0 +1,11 @@
+.git
+.venv
+node_modules
+data
+.cache
+test-results
+playwright-report
+.env
+.env.*
+reports/coverage.json
+docs/screenshots

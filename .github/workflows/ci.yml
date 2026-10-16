@@ -1,0 +1,38 @@
+name: Verify FlowLedger
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: python -m pip install -c requirements.lock -e '.[dev]'
+      - run: python -m pytest -q --cov=flowledger --cov-report=xml
+      - run: python -m flowledger.verify
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: ui-tests/package-lock.json
+      - run: npm ci
+        working-directory: ui-tests
+      - run: npx playwright install --with-deps chromium
+        working-directory: ui-tests
+      - run: npm test
+        working-directory: ui-tests
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: verification
+          path: |
+            reports/verification.json
+            coverage.xml
+            ui-tests/playwright-report/

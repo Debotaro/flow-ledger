@@ -1,0 +1,145 @@
+{
+  "status": "complete",
+  "generated_at": "2026-10-16T08:58:21.587801+00:00",
+  "scope": "Isolated fictional SQLite/local-case experiments. Includes real worker subprocesses and abrupt exits; retry/lease boundary scenarios explicitly inject a clock. No external connector, payment, message delivery, throughput benchmark or general exactly-once guarantee.",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Windows",
+    "sqlite": "3.53.1"
+  },
+  "settings": {
+    "lease_seconds": 30,
+    "retry_base_seconds": 2,
+    "max_attempts": 3,
+    "max_replays": 2
+  },
+  "scenarios": [
+    {
+      "name": "Concurrent idempotent intake",
+      "passed": true,
+      "details": {
+        "concurrent_submissions": 12,
+        "created_jobs": 1,
+        "duplicates": 11,
+        "conflicting_payloads_rejected": 1,
+        "event_rows": 1,
+        "clock": "system UTC"
+      },
+      "elapsed_ms": 98.76
+    },
+    {
+      "name": "Concurrent worker claims",
+      "passed": true,
+      "details": {
+        "worker_threads": 8,
+        "submitted_jobs": 16,
+        "processed_jobs": 16,
+        "succeeded_jobs": 16,
+        "local_cases": 16,
+        "duplicate_effects": 0
+      },
+      "elapsed_ms": 792.44
+    },
+    {
+      "name": "Approval and rejection policy",
+      "passed": true,
+      "details": {
+        "pending_before_decision": 2,
+        "effects_before_approval": 0,
+        "approved_jobs": 1,
+        "rejected_jobs": 1,
+        "local_cases": 1,
+        "actor_identity": "self-asserted demonstration label"
+      },
+      "elapsed_ms": 86.24
+    },
+    {
+      "name": "Retry due times and exhaustion",
+      "passed": true,
+      "details": {
+        "clock": "injected UTC; actual SQLite transitions",
+        "early_claims_blocked": 2,
+        "transient_attempts": 2,
+        "exhausted_attempts": 3,
+        "retry_delays_seconds": [
+          2,
+          4
+        ],
+        "dead_letter_jobs": 1,
+        "local_cases": 1
+      },
+      "elapsed_ms": 130.99
+    },
+    {
+      "name": "Expired lease token fencing",
+      "passed": true,
+      "details": {
+        "clock": "injected UTC at exact 30-second lease boundary",
+        "stale_mutations_rejected": 3,
+        "stale_audit_writes": 0,
+        "attempts": 2,
+        "local_cases": 1
+      },
+      "elapsed_ms": 68.84
+    },
+    {
+      "name": "Replay retains effect identity",
+      "passed": true,
+      "details": {
+        "fault": "injected failure after effect commit",
+        "clock": "injected UTC",
+        "replay_count": 1,
+        "local_cases": 1,
+        "retained_event_rows": 1,
+        "duplicate_effects": 0
+      },
+      "elapsed_ms": 120.23
+    },
+    {
+      "name": "Independent polling worker process",
+      "passed": true,
+      "details": {
+        "execution": "separate polling Python process; terminated after all acknowledgements",
+        "submitted_jobs": 5,
+        "succeeded_jobs": 5,
+        "worker_output_records": 5,
+        "local_cases": 5,
+        "clock": "system UTC"
+      },
+      "elapsed_ms": 676.74
+    },
+    {
+      "name": "Process crash after effect on first attempt",
+      "passed": true,
+      "details": {
+        "fault": "real subprocess os._exit(86) after committed case, before acknowledgement",
+        "exit_code": 86,
+        "lease_seconds_override": 1,
+        "clock": "system UTC; real lease wait",
+        "attempts": 1,
+        "status_after_restart": "succeeded",
+        "local_cases": 1,
+        "duplicate_effects": 0
+      },
+      "elapsed_ms": 1309.47
+    },
+    {
+      "name": "Process crash after effect on final attempt",
+      "passed": true,
+      "details": {
+        "fault": "real subprocess os._exit(86) after committed case, before acknowledgement",
+        "exit_code": 86,
+        "lease_seconds_override": 1,
+        "clock": "system UTC; real lease wait",
+        "attempts": 3,
+        "status_after_restart": "succeeded",
+        "local_cases": 1,
+        "duplicate_effects": 0
+      },
+      "elapsed_ms": 3412.78
+    }
+  ],
+  "passed": 9,
+  "total": 9,
+  "elapsed_ms": 6741.1
+}

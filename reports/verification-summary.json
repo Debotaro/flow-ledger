@@ -1,0 +1,20 @@
+{
+  "project": "FlowLedger",
+  "client_date": "2026-10-16",
+  "local_acceptance": "passed",
+  "backend_tests_passed": 20,
+  "browser_checks_passed": 16,
+  "separate_screenshot_tests_passed": 1,
+  "screenshots_visually_inspected": 4,
+  "reliability_experiments_passed": 9,
+  "reliability_experiments_total": 9,
+  "ruff": "passed",
+  "browser_formatting": "passed",
+  "viewports_tested_px": [1440, 390, 320],
+  "automated_accessibility_violations_observed": 0,
+  "browser_scope": "Actual local API/SQLite workflow checks; four boundary tests and interrupted-intake response behavior explicitly simulate browser responses. Automated accessibility is limited to tested states.",
+  "docker_executed": false,
+  "hosted_ci_executed": false,
+  "public_deployment": "pending_approval_and_authorized_host",
+  "limitations": ["single shared workspace", "self-asserted approval actor labels", "local case connector only", "synthetic controlled fault experiments", "no universal exactly-once delivery claim"]
+}

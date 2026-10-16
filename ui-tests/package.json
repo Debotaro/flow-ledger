@@ -1,0 +1,20 @@
+{
+  "name": "flowledger-browser-tests",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Real-browser workflow, recovery and accessibility checks for FlowLedger.",
+  "scripts": {
+    "test": "node node_modules/@playwright/test/cli.js test",
+    "test:headed": "node node_modules/@playwright/test/cli.js test --headed",
+    "screenshots": "node node_modules/@playwright/test/cli.js test screenshots.spec.js",
+    "format:check": "node node_modules/prettier/bin/prettier.cjs --check ../flowledger/static *.js package.json"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@playwright/test": "1.64.1",
+    "prettier": "3.9.10"
+  }
+}

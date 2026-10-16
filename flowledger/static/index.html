@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#1e355b" />
+    <title>FlowLedger — an accountable outcome</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%23273f6e'/%3E%3Cpath d='M9 9h14v4H13v4h8v4h-8v4H9z' fill='%23f2eddf'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="/assets/style.css" />
+    <script defer src="/assets/app.js"></script>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <div class="shell">
+      <aside class="sidebar" aria-label="Workspace navigation">
+        <a href="#queue" class="brand"
+          ><span class="brand-icon" aria-hidden="true"
+            ><svg viewBox="0 0 30 30">
+              <path d="M7 8h16M7 15h11M7 22h8" />
+              <path d="m18 18 5 4-5 4" /></svg></span
+          ><span
+            >FlowLedger<span class="brand-caption"
+              >DURABLE BY DESIGN</span
+            ></span
+          ></a
+        >
+        <div class="workspace-name">
+          <span class="workspace-initial" aria-hidden="true">01</span>
+          <div>Local operations<span>Single workspace</span></div>
+          <span class="workspace-dot" aria-hidden="true"></span>
+        </div>
+        <nav aria-label="Main">
+          <a
+            href="#queue"
+            data-view="queue"
+            class="nav-link active"
+            aria-current="page"
+            ><span aria-hidden="true">↳</span>Work queue<span class="nav-number"
+              >01</span
+            ></a
+          ><a href="#cases" data-view="cases" class="nav-link"
+            ><span aria-hidden="true">▤</span>Local cases<span
+              id="nav-case-count"
+              class="nav-number"
+              >0</span
+            ></a
+          ><a href="#audit" data-view="audit" class="nav-link"
+            ><span aria-hidden="true">≡</span>Audit ledger<span
+              class="nav-number"
+              >03</span
+            ></a
+          ><a href="#verification" data-view="verification" class="nav-link"
+            ><span aria-hidden="true">◇</span>Verification<span
+              class="nav-number"
+              >04</span
+            ></a
+          >
+        </nav>
+        <section class="sidebar-note">
+          <p class="micro-label">THE OPERATING PRINCIPLE</p>
+          <h2>Intake. Decide.<br />Execute. Account.</h2>
+          <p>
+            Every event has an identity.<br />Every decision leaves a record.
+          </p>
+          <div class="sidebar-rule" aria-hidden="true"></div>
+          <span class="sidebar-note-caption"
+            >DETERMINISTIC ROUTING<br />LOCAL CASE EFFECTS</span
+          >
+        </section>
+        <div class="sidebar-bottom">
+          <span class="local-icon" aria-hidden="true">⌁</span>
+          <p>State survives the session.<span>SQLite · durable outbox</span></p>
+        </div>
+      </aside>
+      <div class="workspace">
+        <header class="topbar">
+          <div class="breadcrumb">
+            OPERATIONS <span aria-hidden="true">/</span>
+            <strong id="view-name">Work queue</strong>
+          </div>
+          <div class="connection-controls">
+            <span class="connection-state" id="connection-state"
+              ><span class="status-dot" aria-hidden="true"></span
+              ><span id="connection-label">Connecting</span></span
+            ><button id="connection-button" class="button button-text">
+              Connection <span aria-hidden="true">↗</span>
+            </button>
+          </div>
+        </header>
+        <div
+          id="global-error"
+          role="alert"
+          class="message error-message"
+          hidden
+        ></div>
+        <div
+          id="global-notice"
+          role="status"
+          class="message notice-message"
+          hidden
+        ></div>
+        <main id="main-content" tabindex="-1">
+          <section id="view-queue" class="view" aria-labelledby="queue-title">
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">
+                  <span aria-hidden="true"></span> THE WORK, IN PLAIN SIGHT
+                </p>
+                <h1 id="queue-title">Every event. An accountable outcome.</h1>
+                <p class="page-description">
+                  A durable queue for support workflows, with human decisions
+                  where they matter.
+                </p>
+              </div>
+              <button id="new-event" class="button button-primary">
+                <span aria-hidden="true">+</span> New event
+              </button>
+            </div>
+            <div class="scope-banner">
+              <span class="scope-label">LOCAL WORKSPACE</span>
+              <p>
+                Deterministic routing. Actions create local case records only.
+                No real refunds, messages or account changes.
+              </p>
+              <span id="demo-label" class="demo-label" hidden>DEMO MODE</span>
+            </div>
+            <div
+              id="status-summary"
+              class="status-summary"
+              aria-label="Actual job counts by status"
+            ></div>
+            <div class="queue-toolbar">
+              <div class="queue-heading">
+                <h2>Work queue</h2>
+                <span id="queue-count" class="count-pill">0</span
+                ><span class="table-scope">Latest 100 per filter</span>
+              </div>
+              <div class="queue-tools">
+                <label class="visually-hidden" for="status-filter"
+                  >Filter by status</label
+                ><select id="status-filter">
+                  <option value="">All statuses</option>
+                  <option value="queued">Queued</option>
+                  <option value="running">Running</option>
+                  <option value="retry_wait">Retry scheduled</option>
+                  <option value="pending_approval">Needs approval</option>
+                  <option value="succeeded">Succeeded</option>
+                  <option value="dead_letter">Dead letter</option>
+                  <option value="rejected">Rejected</option></select
+                ><button id="refresh-queue" class="button button-secondary">
+                  Refresh <span aria-hidden="true">↻</span></button
+                ><button id="run-next" class="button button-primary">
+                  Run one due job <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            </div>
+            <p class="worker-note">
+              The worker control executes at most one due job. Scheduled retries
+              become runnable at their recorded due time.
+            </p>
+            <div id="queue-layout" class="queue-layout">
+              <section class="queue-list" aria-label="Jobs">
+                <div class="table-wrap">
+                  <table class="jobs-table">
+                    <caption class="visually-hidden">
+                      Latest workflow jobs. Select a subject to inspect the
+                      event and audit trail.
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Event / category</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Attempts</th>
+                        <th scope="col" class="date-column">Updated · UTC</th>
+                      </tr>
+                    </thead>
+                    <tbody id="jobs-body"></tbody>
+                  </table>
+                </div>
+                <div id="queue-empty" class="empty-panel" hidden>
+                  <span class="empty-mark" aria-hidden="true">↳</span>
+                  <p class="micro-label">ROOM FOR THE NEXT EVENT</p>
+                  <h3 id="queue-empty-title">An orderly start.</h3>
+                  <p id="queue-empty-description">
+                    Create an event to follow its journey, or load the fictional
+                    demonstration queue.
+                  </p>
+                  <button id="seed-button" class="button button-secondary">
+                    Load fictional events
+                    <span aria-hidden="true">↗</span></button
+                  ><span class="empty-footnote"
+                    >Synthetic support examples. No customer data.</span
+                  >
+                </div>
+              </section>
+              <section
+                id="job-inspector"
+                class="job-inspector"
+                aria-label="Selected job"
+                hidden
+              ></section>
+            </div>
+            <div class="queue-footer">
+              <span id="overview-caption">Reading workspace state…</span
+              ><span>Approval → execution → audit</span>
+            </div>
+          </section>
+          <section
+            id="view-cases"
+            class="view"
+            aria-labelledby="cases-title"
+            hidden
+          >
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">
+                  <span aria-hidden="true"></span> THE ACTUAL LOCAL EFFECT
+                </p>
+                <h1 id="cases-title">Cases, with their origin attached.</h1>
+                <p class="page-description">
+                  These are the records the worker created. Each links back to
+                  its original event.
+                </p>
+              </div>
+              <button id="refresh-cases" class="button button-secondary">
+                Refresh cases <span aria-hidden="true">↻</span>
+              </button>
+            </div>
+            <div class="scope-banner">
+              <span class="scope-label">EFFECT BOUNDARY</span>
+              <p>
+                A case is a local database record. A refund request or security
+                escalation here does not perform that real-world action.
+              </p>
+            </div>
+            <div id="cases-list" class="cases-list"></div>
+          </section>
+          <section
+            id="view-audit"
+            class="view"
+            aria-labelledby="audit-title"
+            hidden
+          >
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">
+                  <span aria-hidden="true"></span> A RECORD OF THE WORK
+                </p>
+                <h1 id="audit-title">Every transition has a receipt.</h1>
+                <p class="page-description">
+                  The latest 200 recorded events across intake, decisions,
+                  execution and recovery.
+                </p>
+              </div>
+              <button id="refresh-audit" class="button button-secondary">
+                Refresh ledger <span aria-hidden="true">↻</span>
+              </button>
+            </div>
+            <p class="audit-scope">
+              Actors are self-asserted labels, not verified user identities. All
+              timestamps are shown in UTC.
+            </p>
+            <div id="audit-list" class="audit-list"></div>
+          </section>
+          <section
+            id="view-verification"
+            class="view"
+            aria-labelledby="verification-title"
+            hidden
+          >
+            <div class="page-heading">
+              <div>
+                <p class="eyebrow">
+                  <span aria-hidden="true"></span> RELIABILITY, DEMONSTRATED
+                </p>
+                <h1 id="verification-title">
+                  Show the failure. Prove the recovery.
+                </h1>
+                <p class="page-description">
+                  Recorded experiments against real SQLite state transitions,
+                  with deliberate fault injection.
+                </p>
+              </div>
+              <button id="refresh-verification" class="button button-secondary">
+                Refresh report <span aria-hidden="true">↻</span>
+              </button>
+            </div>
+            <div class="scope-banner">
+              <span class="scope-label">MEASURED SCOPE</span>
+              <p>
+                Local, synthetic experiments. These results do not claim
+                production throughput or exactly-once delivery to external
+                systems.
+              </p>
+            </div>
+            <div id="verification-report"></div>
+          </section>
+        </main>
+        <footer class="workspace-footer">
+          <span
+            >FlowLedger <span aria-hidden="true">/</span> Reliable work has a
+            record.</span
+          ><span id="footer-policy"
+            >Bounded retries · human approval · durable state</span
+          >
+        </footer>
+      </div>
+    </div>
+    <dialog
+      id="event-dialog"
+      class="modal"
+      aria-labelledby="event-dialog-title"
+    >
+      <form id="event-form">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">A NEW ENTRY IN THE LEDGER</p>
+            <h2 id="event-dialog-title">Create an event</h2>
+          </div>
+          <button
+            type="button"
+            class="close-dialog icon-button"
+            aria-label="Close event dialog"
+          >
+            ×
+          </button>
+        </div>
+        <div class="modal-body">
+          <label for="event-subject">Subject</label
+          ><input
+            id="event-subject"
+            required
+            maxlength="160"
+            placeholder="For example, Fictional delivery needs attention"
+          /><label for="event-description">Description</label
+          ><textarea
+            id="event-description"
+            rows="4"
+            maxlength="4000"
+            required
+            placeholder="Describe the support event. Keep private customer information out of demonstration data."
+          ></textarea>
+          <div class="form-grid">
+            <div>
+              <label for="event-category">Category</label
+              ><select id="event-category">
+                <option value="delivery">Delivery</option>
+                <option value="refund">Refund · approval required</option>
+                <option value="security">Security · approval required</option>
+                <option value="general">General</option>
+              </select>
+            </div>
+            <div>
+              <label for="event-priority">Priority</label
+              ><select id="event-priority">
+                <option value="normal">Normal</option>
+                <option value="low">Low</option>
+                <option value="high">High</option>
+              </select>
+            </div>
+          </div>
+          <label for="event-key"
+            >Idempotency key
+            <span>Same key + same event reuses the job</span></label
+          ><input id="event-key" required maxlength="128" autocomplete="off" />
+          <p class="form-footnote">
+            Keep this key when retrying intake. Reusing a key with different
+            content is rejected.
+          </p>
+          <div id="failure-controls" class="fault-controls" hidden>
+            <label for="event-failure"
+              >Synthetic fault injection <span>Demo only</span></label
+            ><select id="event-failure">
+              <option value="none">None · execute normally</option>
+              <option value="once">Fail first attempt · exercise retry</option>
+              <option value="always">
+                Fail every attempt · exercise dead letter
+              </option>
+            </select>
+            <p>
+              This simulates connector failures in the local demonstration. No
+              external service is called.
+            </p>
+          </div>
+          <p id="event-error" class="form-error" role="alert" hidden></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="button button-secondary close-dialog">
+            Cancel</button
+          ><button
+            id="create-event"
+            type="submit"
+            class="button button-primary"
+          >
+            Create event <span aria-hidden="true">→</span>
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <dialog
+      id="action-dialog"
+      class="modal modal-small"
+      aria-labelledby="action-title"
+    >
+      <form id="action-form">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">AN ACCOUNTABLE DECISION</p>
+            <h2 id="action-title">Approve this job?</h2>
+          </div>
+          <button
+            type="button"
+            class="close-dialog icon-button"
+            aria-label="Close action dialog"
+          >
+            ×
+          </button>
+        </div>
+        <div class="modal-body">
+          <p id="action-description"></p>
+          <label for="action-actor"
+            >Actor label
+            <span>Self-asserted, not verified identity</span></label
+          ><input
+            id="action-actor"
+            required
+            maxlength="80"
+            placeholder="For example, Demo operator"
+          /><label for="action-note">Reason</label
+          ><textarea
+            id="action-note"
+            required
+            maxlength="500"
+            rows="3"
+            placeholder="Record why you are taking this action."
+          ></textarea>
+          <p id="action-error" class="form-error" role="alert" hidden></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="button button-secondary close-dialog">
+            Cancel</button
+          ><button
+            id="submit-action"
+            type="submit"
+            class="button button-primary"
+          >
+            Approve job
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <dialog
+      id="connection-dialog"
+      class="modal modal-small"
+      aria-labelledby="connection-title"
+    >
+      <form id="connection-form">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">WORKSPACE ACCESS</p>
+            <h2 id="connection-title">Connection settings</h2>
+          </div>
+          <button
+            type="button"
+            class="close-dialog icon-button"
+            aria-label="Close connection dialog"
+          >
+            ×
+          </button>
+        </div>
+        <div class="modal-body">
+          <p id="connection-description">
+            An optional API token stays in this browser tab's session storage.
+          </p>
+          <label for="api-token">API token</label
+          ><input
+            id="api-token"
+            type="password"
+            autocomplete="off"
+            placeholder="Your workspace token"
+          />
+          <p class="form-footnote">
+            Sent only to this application's same-origin API. Local mode may not
+            require a token.
+          </p>
+          <p id="connection-error" class="form-error" role="alert" hidden></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="button button-secondary close-dialog">
+            Cancel</button
+          ><button
+            id="connect-submit"
+            type="submit"
+            class="button button-primary"
+          >
+            Save and connect
+          </button>
+        </div>
+      </form>
+    </dialog>
+    <div
+      id="live-status"
+      class="visually-hidden"
+      role="status"
+      aria-live="polite"
+    ></div>
+  </body>
+</html>
