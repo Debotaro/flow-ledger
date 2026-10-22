@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "flow-ledger",
+  "main": "edge/index.ts",
+  "compatibility_date": "2026-07-29",
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": { "directory": "dist", "binding": "ASSETS", "not_found_handling": "single-page-application", "run_worker_first": ["/api", "/api/*"] },
+  "durable_objects": { "bindings": [{ "name": "FLOW", "class_name": "FlowLedgerAuthority" }] },
+  "migrations": [{ "tag": "flow-sqlite-v1", "new_sqlite_classes": ["FlowLedgerAuthority"] }]
+}

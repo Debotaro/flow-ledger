@@ -1,0 +1,7 @@
+{
+  "name": "flow-ledger-edge",
+  "private": true,
+  "type": "module",
+  "scripts": { "prepare:edge": "node scripts/prepare-edge-assets.mjs", "typecheck:edge": "tsc --noEmit -p edge/tsconfig.json", "build:edge": "npm run prepare:edge && npm run typecheck:edge && wrangler deploy --dry-run --outdir edge-dist", "deploy:edge": "npm run build:edge && wrangler deploy" },
+  "devDependencies": { "@cloudflare/workers-types": "5.20261016.1", "typescript": "5.9.3", "wrangler": "4.151.1" }
+}

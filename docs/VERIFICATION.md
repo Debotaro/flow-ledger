@@ -38,4 +38,10 @@ After publication approval, [GitHub Actions run 38913699730](https://github.com/
 
 `scripts/container_smoke.py` starts the supplied Compose API and independent worker in a disposable project with a unique named volume and a temporary token. It verifies authentication and disabled demo faults, both containers' non-root UID/GID 10001, shared storage, real worker processing, duplicate intake preserving one case, approval gating, persistent state after both services restart, queued work while the worker is stopped, recovery after worker restart and the image HTTP health check. The script cleans up only its own disposable project. The exact downloaded CI artifact is retained as [hosted-container-verification.json](../reports/hosted-container-verification.json).
 
-This is a successful hosted verification run, not a public application deployment or an availability/load test. The connector still creates local SQLite cases only. The public source repository is available; a persistent backend host, HTTPS hostname and operating authorization are still required before a live service can be claimed.
+This is a successful hosted verification run, not an availability/load test. The Python connector still creates local SQLite cases only.
+
+## Card-free public edge verification
+
+The bounded edge edition is live at [flow-ledger.debotaro-studio.workers.dev](https://flow-ledger.debotaro-studio.workers.dev). It was deployed with Wrangler to Cloudflare Workers Free using Durable Object SQLite and no billing setup. Public smoke checks verified HTTPS HTML delivery, `/api/health`, seed data, idempotent event intake, approval gating, a worker tick, durable local case creation and audit history. The edge `/api/verification` endpoint intentionally reports `0/0` because the nine Python reliability experiments above were not rerun in this different runtime.
+
+The public demo is unauthenticated and synthetic-data-only. It is suitable for recruiter review and bounded workflow inspection; the full Python service remains the reference implementation for lease fencing, retries, replay, crash recovery and independent polling-worker behavior.

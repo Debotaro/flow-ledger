@@ -58,6 +58,12 @@ The verification command runs isolated real SQLite workflows with controlled fau
 
 FastAPI/Pydantic provides typed JSON contracts; SQLite WAL stores events, durable outbox jobs, audit and case effects. The static same-origin operator console reads actual state. A separate worker claims and executes due work. See [architecture](docs/ARCHITECTURE.md), [security](SECURITY.md), [operations](docs/OPERATIONS.md) and [API contract](API_CONTRACT.md).
 
-A non-root container, local Compose configuration, dependency lock and GitHub Actions workflow are included. Hosted CI has executed the backend/browser checks and built and run the image: thirteen Compose smoke checks passed, including independent worker progress and persistence across service restarts. See the [executed release record](docs/VERIFICATION.md#public-release-and-hosted-container-execution). A public application deployment remains pending an authorized persistent host, HTTPS, a workspace token and an explicit allowed hostname.
+A non-root container, local Compose configuration, dependency lock and GitHub Actions workflow are included. Hosted CI has executed the backend/browser checks and built and run the image: thirteen Compose smoke checks passed, including independent worker progress and persistence across service restarts. See the [executed release record](docs/VERIFICATION.md#public-release-and-hosted-container-execution).
+
+## Public edge edition
+
+The no-card public demo is live at **https://flow-ledger.debotaro-studio.workers.dev**. It uses Cloudflare Workers and Durable Object SQLite, so fictional events, approvals, queue transitions, local cases and audit records persist server-side over HTTPS. The static operator console is the same UI surface as the repository application.
+
+This edge edition is deliberately bounded: it runs a deterministic local worker tick, does not call external connectors, and does not claim the Python reliability experiments as edge runtime results. Replay remains reserved for the full Python worker. Use the local Python/SQLite/Compose implementation for the complete lease, retry, crash-recovery and independent-worker scenarios documented below. The public demo is unauthenticated and contains only synthetic examples; do not submit personal or operational data.
 
 Personal portfolio project for Deboraj Sarkar, developed with Codex-assisted implementation and executable review. It demonstrates system behavior, not prior automation employment or independently assessed individual proficiency. See [engineering walkthrough](docs/WALKTHROUGH.md). Code is MIT licensed.
